@@ -1,0 +1,1045 @@
+{
+	"info": {
+		"_postman_id": "701c015b-b10f-4119-ad32-6de0536bd31f",
+		"name": "Coleção Pagar.me V5 PSP | E-commerce clássico",
+		"description": "Coleção de requisições a serem utilizadas na VERSÃO 5 da API Pagar.me, no modelo PSP.\n\nAh, você pode contar com os [nossos simuladores](https://docs.pagar.me/docs/o-que-é-um-simulador) para testar diferentes cenários que podem ocorrem em produção.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6546653",
+		"_collection_link": "https://mundipagg.postman.co/workspace/Workspace's-Jucimar~2da55d7d-0e16-421b-824f-32f1bff22df2/collection/6546653-701c015b-b10f-4119-ad32-6de0536bd31f?action=share&creator=6546653&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Criação de Clientes e Cartões",
+			"item": [
+				{
+					"name": "Clientes",
+					"item": [
+						{
+							"name": "Criar um Cliente",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"individual\", // individual ou company \r\n    \"name\": \"Tony Stark\",\r\n    \"email\": \"avengerstark@ligadajustica.com.br\",\r\n    \"document_type\": \"CPF\", // CPF, CNPJ ou PASSPORT\r\n    \"document\": \"03154435026\",\r\n    \"gender\": \"male\",\r\n    \"phones\": {\r\n        \"home_phone\": {\r\n            \"country_code\": \"55\",\r\n            \"area_code\": \"11\",\r\n            \"number\": \"000000000\"\r\n        },\r\n        \"mobile_phone\": {\r\n            \"country_code\": \"55\",\r\n            \"area_code\": \"11\",\r\n            \"number\": \"000000000\"\r\n        }\r\n    },\r\n    \"address\": {\r\n        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiros\",\r\n        \"line_2\": \"Prédio\",\r\n        \"zip_code\": \"05425070\",\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\",\r\n        \"country\": \"BR\"\r\n    },\r\n    \"code\": \"123\", //Código de referência no sistema da loja. Max: 52 caracteres\r\n    \"birthdate\": \"01/09/1993\",\r\n    \"metadata\": {\r\n        \"company\": \"Lannister\"\r\n    }\r\n}\r\n//  O e-mail do cliente é único -> É importante destacar que o campo e-mail é único, ou seja, caso seja requisitada a criação de um cliente com um e-mail já cadastrado, o endpoint irá atualizar os dados do customer anteriormente cadastrado com o email informado.\r\n//  Clientes com Passaporte -> Clientes com documento do tipo \"passport\" na integração da Sub Pagar.me só conseguirão transacionar utilizando endereços internacionais, reconhecidos pelo ZIP Code de cada país.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obter um Cliente",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar um Cliente",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Tony Stark\",\r\n    \"email\": \"avengerstark@ligadajustica.com.br\",\r\n    \"gender\": \"male\"\r\n}\r\n//  Este endpoint altera todos os dados do customer! Ao enviar uma requisição sem todas as informações do customer, as informações não enviadas serão sobrescritas como 'null'. Por exemplo: Se o customer já tem um telefone cadastrado e você realizar esse PUT sem o dado de telefone, o telefone será apagado.\r\n//  É importante destacar que o campo e-mail é único, ou seja, caso seja requisitada a criação de um cliente com um e-mail já cadastrado, o endpoint irá atualizar os dados do customer anteriormente cadastrado com o email informado.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Clientes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cartões",
+					"item": [
+						{
+							"name": "Criar cartão (Card Id)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"number\": \"4000000000000010\",\r\n    \"holder_name\": \"Tony Stark\",\r\n    \"holder_document\": \"03154435026\",\r\n    \"exp_month\": 1, //Mês de validade do cartão. Valor entre 1 e 12\r\n    \"exp_year\": 30, //Ano de validade do cartão. Formatos yy ou yyyy. Ex: 23 ou 2023.\r\n    \"cvv\": \"123\", //Código de segurança do cartão. O campo aceita 4 ou 3 caracteres, variando por bandeira.\r\n    \"brand\": \"Mastercard\",\r\n    \"label\": \"Renner\",\r\n    \"billing_address\": {\r\n        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n        \"line_2\": \"Prédio\",\r\n        \"zip_code\": \"05425070\",\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\",\r\n        \"country\": \"BR\"\r\n    },\r\n    \"metadata\": {\r\n        \"Classificação\": \"Cliente VIP\"\r\n    }\r\n}\r\n//  Falha na verificação de cartão -> Quando a verificação de cartão esta ativa e ocorre uma falha na verificação, a API irá retornar erro \"412\" com a mensagem: \"Could not create credit card. The card verification failed.\"\r\n//  Cartão já cadastrado -> Caso um cliente tente cadastrar um mesmo cartão mais de uma vez*, será retornado o mesmo card_id do cartão previamente cadastrado.\r\n//  Campo \"brand\" é obrigatório para cartões Private Label -> Caso o cartão seja private label (ou seja private_label = true), brand será um campo obrigatório.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/cards",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obter cartão",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/cards/{{ID do cartão}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"cards",
+										"{{ID do cartão}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar cartões",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/cards",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"cards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar cartão",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"billing_address\": {\r\n        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n        \"line_2\": \"Prédio\",\r\n        \"zip_code\": \"05425070\",\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\",\r\n        \"country\": \"BR\"\r\n    },\r\n    \"holder_name\": \"Peter Parker\",\r\n    \"exp_month\": 12,\r\n    \"exp_year\": 2030\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/cards/{{card_id}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"cards",
+										"{{card_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Excluir cartão",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"billing_address\": {\r\n        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n        \"line_2\": \"Prédio\",\r\n        \"zip_code\": \"05425070\",\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\",\r\n        \"country\": \"BR\"\r\n    },\r\n    \"holder_name\": \"Peter Parker\",\r\n    \"exp_month\": 12,\r\n    \"exp_year\": 2030\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/cards/{{card_id}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"cards",
+										"{{card_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Renovar cartão",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{customer_id}}/cards/{{card_id}}/renew",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{customer_id}}",
+										"cards",
+										"{{card_id}}",
+										"renew"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar Token de cartão (Card Token)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"card\",\r\n    \"card\": {\r\n        \"number\": \"4000000000000010\",\r\n        \"holder_name\": \"Tyrion Lannister\",\r\n        \"holder_document\": \"03154435026\",\r\n        \"exp_month\": 1, //Mês de validade do cartão. Valor entre 1 e 12\r\n        \"exp_year\": 30, //Ano de validade do cartão. Formatos yy ou yyyy. Ex: 23 ou 2023.\r\n        \"cvv\": \"123\", //Código de segurança do cartão. O campo aceita 4 ou 3 caracteres, variando por bandeira.\r\n        \"brand\": \"Mastercard\",\r\n        \"label\": \"Renner\",\r\n        \"billing_address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        }\r\n    }\r\n}\r\n//  Atenção! A entidade de billing address do cartão não é tokenizada. Logo, ao criar um pedido/cobrança com token também será preciso informar o billing address.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/tokens?appId={{chave pública}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"tokens"
+									],
+									"query": [
+										{
+											"key": "appId",
+											"value": "{{chave pública}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Endereços",
+					"item": [
+						{
+							"name": "Criar endereço para um Cliente",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n    \"line_2\": \"Prédio\",\r\n    \"zip_code\": \"05425070\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"country\": \"BR\",\r\n    \"metadata\": {\r\n        \"id\": \"my_address_id\"\r\n    }\r\n}\r\n//  Clientes com endereços Internacionais -> Clientes que coloquem o passaporte como documento podem transacionar, colocando o endereço internacional. e em vez do CEP o ZIP Code do país. Não é possível um cliente usar o passaporte e colocar um endereço nacional."
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/addresses",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obter um endereço do Cliente",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{Id do cliente}}/addresses/{{Id do endereço}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{Id do cliente}}",
+										"addresses",
+										"{{Id do endereço}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar um endereço do Cliente",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"line_2\": \"10º andar\",\r\n    \"metadata\": {\r\n        \"id\": \"Endreço do meu trabalho\"\r\n    }\r\n}"
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/addresses/{{ID do endereço}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"addresses",
+										"{{ID do endereço}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar endereços de um cliente",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{ID do cliente}}/addresses",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{ID do cliente}}",
+										"addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deletar endereço de um cliente",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/customers/{{Id do cliente}}/addresses/{{ID do endereço}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"customers",
+										"{{Id do cliente}}",
+										"addresses",
+										"{{ID do endereço}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "A nova API possibilita a construção e o gerenciamento de uma Carteira de Clientes, completamente customizável.\n\nÉ possível criar um cliente (customer) informando os seguintes dados:\n\n`Name` (Nome do cliente);  \n`Email` (Email do cliente);  \n`Document` (Documento);  \n`Type` (Pessoa física ou jurídica);  \n`Phones` (Telefones do cliente);  \n`Birthdate` (Data de nascimento);  \n`Address` (Endereço do cliente).\n\n  \nSempre que um novo cliente (customer) é criado, o mesmo vai diretamente para a sua carteira. Sua coleção será alimentada automaticamente sempre que uma cobrança for gerada, seja de forma avulsa, através de pedidos ou assinaturas.\n\n**Dados obrigatórios**\n\nApenas o nome (name) é obrigatório na criação de um cliente, porém ele não é único.\n\n  \n**Atenção!**\n\nA propriedade email não é obrigatória, porém é única e é uma chave forte! Ou seja, caso você envie o e-mail no objeto customer, o nosso sistema irá vincular as informações de cartão ao comprador já existente.\n\nFuncionalidades relacionadas à carteira de clientes:\n\n1) Incluir  \n2) Obter  \n3) Atualizar  \n4) Listar  \n  \n**Código identificador do seu cliente**\n\nTodo cliente (customer) possui um código como este: cus_dbaKMJJiPtDmMlrp  \nEste customer_Id será sua chave de identificação na carteira.  \nDessa forma, você consegue armazenar os dados pessoais e dos cartões do cliente no ambiente PCI Compliance do Pagar.me, garantindo o tráfego de informações sem se preocupar com vulnerabilidades e falhas de segurança."
+		},
+		{
+			"name": "Criação de Pedidos",
+			"item": [
+				{
+					"name": "Pedidos",
+					"item": [
+						{
+							"name": "Criar pedido com Card Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"closed\": true,\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"type\": \"individual\",\r\n        \"email\": \"avengerstark@ligadajustica.com.br\",\r\n        \"document\": \"03154435026\",\r\n        \"address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        },\r\n        \"phones\": {\r\n            \"home_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            },\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            }\r\n        }\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"amount\": 2990,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": 123\r\n        }\r\n    ],\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"credit_card\",\r\n            \"credit_card\": {\r\n                \"operation_type\": \"auth_and_capture\",\r\n                \"installments\": 1,\r\n                \"statement_descriptor\": \"AVENGERS\", //Máximo de 13 caracteres\r\n                \"card_token\": \"{{card_token}}\",\r\n                \"card\": {\r\n                    \"billing_address\": {\r\n                        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n                        \"zip_code\": \"05425070\",\r\n                        \"city\": \"São Paulo\",\r\n                        \"state\": \"SP\",\r\n                        \"country\": \"BR\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}\r\n//  O campo billing é obrigatório para todas as transações de cartão de crédito quando o antifraude estiver habilitado.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar pedido com Card ID + CVV",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"closed\": true,\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"type\": \"individual\",\r\n        \"email\": \"avengerstark@ligadajustica.com.br\",\r\n        \"document\": \"03154435026\",\r\n        \"address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        },\r\n        \"phones\": {\r\n            \"home_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            },\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            }\r\n        }\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"amount\": 2990,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": 123\r\n        }\r\n    ],\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"credit_card\",\r\n            \"credit_card\": {\r\n                \"installments\": 1,\r\n                \"statement_descriptor\": \"AVENGERS\", //Máximo de 13 caracteres\r\n                \"card_id\": \"{{Card_id}}\",\r\n                \"card\": {\r\n                    \"cvv\": \"123\",\r\n                    \"billing_address\": {\r\n                        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n                        \"zip_code\": \"05425070\",\r\n                        \"city\": \"São Paulo\",\r\n                        \"state\": \"SP\",\r\n                        \"country\": \"BR\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}\r\n// A confirmação do CVV não é obrigatória, mas é importante pois funciona como uma camada de segurança. Por isso, indicamos sempre solicitar a confirmação dessa informação.\r\n// O campo billing é obrigatório para todas as transações de cartão de crédito quando o antifraude estiver habilitado.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar pedido com os dados abertos do cartão de crédito (PCI Compliance) - Dados mínimos obrigatórios",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"closed\": true,\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"type\": \"individual\",\r\n        \"email\": \"avengerstark@ligadajustica.com.br\",\r\n        \"document\": \"03154435026\",\r\n        \"address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        },\r\n        \"phones\": {\r\n            \"home_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            },\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            }\r\n        }\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"amount\": 2990,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": 123\r\n        }\r\n    ],\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"credit_card\",\r\n            \"credit_card\": {\r\n                \"installments\": 1,\r\n                \"statement_descriptor\": \"AVENGERS\", //Máximo de 13 caracteres\r\n                \"card\": {\r\n                    \"number\": \"4000000000000010\",\r\n                    \"holder_name\": \"Tony Stark\",\r\n                    \"exp_month\": 1,\r\n                    \"exp_year\": 30,\r\n                    \"cvv\": \"123\",\r\n                    \"billing_address\": {\r\n                        \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n                        \"zip_code\": \"05425070\",\r\n                        \"city\": \"São Paulo\",\r\n                        \"state\": \"SP\",\r\n                        \"country\": \"BR\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}\r\n//  NÃO ENVIE DADOS ABERTOS DO CARTÃO DO COMPRADOR -> Para poder trafegar dados de cartão abertos em seu servidor, você deve ser PCI Compliance. Por isso, recomendamos fortemente que as requisições sejam enviadas sempre usando o card_id ou card_token, de forma que você não precise trafegar os dados de cartão no seu servidor.\r\n//  DADOS DO COMPRADOR SÃO OBRIGATÓRIOS -> Caso seja informado o customer_id, não é necessário incluir o objeto customer. Entretanto, é obrigatório que um desses parâmetros seja informado.\r\n//  O campo billing é obrigatório para todas as transações de cartão de crédito quando o antifraude estiver habilitado.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar pedido com pagamento em Boleto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"closed\": true,\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"type\": \"individual\",\r\n        \"email\": \"avengerstark@ligadajustica.com.br\",\r\n        \"document\": \"03154435026\",\r\n        \"address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        },\r\n        \"phones\": {\r\n            \"home_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            },\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            }\r\n        }\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"amount\": 2990,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": 123\r\n        }\r\n    ],\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"boleto\",\r\n            \"boleto\": {\r\n                \"instructions\": \"Sr. Caixa, favor não aceitar pagamento após o vencimento\",\r\n                \"due_at\": \"2030-02-20T00:00:00Z\"\r\n            }\r\n        }\r\n    ]\r\n}\r\n//  Para testes com boleto, na sua dashboard vá em Configurações > meios de pagamento > boleto > modelo de negócio > Selecione \"Simulator\"\r\n//  DADOS DO COMPRADOR SÃO OBRIGATÓRIOS -> Caso seja informado o customer_id, não é necessário incluir o objeto customer. Entretanto, é obrigatório que um desses parâmetros seja informado.",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar pedido com pagamento em Pix",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"closed\": true,\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"type\": \"individual\",\r\n        \"email\": \"avengerstark@ligadajustica.com.br\",\r\n        \"document\": \"03154435026\",\r\n        \"address\": {\r\n            \"line_1\": \"7221, Avenida Dra Ruth Cardoso, Pinheiro\",\r\n            \"line_2\": \"Prédio\",\r\n            \"zip_code\": \"05425070\",\r\n            \"city\": \"São Paulo\",\r\n            \"state\": \"SP\",\r\n            \"country\": \"BR\"\r\n        },\r\n        \"phones\": {\r\n            \"home_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            },\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"11\",\r\n                \"number\": \"000000000\"\r\n            }\r\n        }\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"amount\": 2990,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": 123\r\n        }\r\n    ],\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"pix\",\r\n            \"pix\": {\r\n                \"expires_in\": \"7200\", //Tempo em segundos\r\n                \"additional_information\": [\r\n                    {\r\n                        \"name\": \"information\",\r\n                        \"value\": \"number\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    ]\r\n}\r\n//  Para testes com Pix, na sua Dashboard vá em Configurações > meios de pagamento > Pix > modelo de negócio > Selecione \"Simulator\"",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obter um pedido",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[`Request Successful: ${pm.info.requestName} [ResponseCode: ${responseCode.code}]`] = responseCode.code < 500 && responseCode.code != 404;"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders/{{ID do pedido}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders",
+										"{{ID do pedido}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar pedidos",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[`Request Successful: ${pm.info.requestName} [ResponseCode: ${responseCode.code}]`] = responseCode.code < 500 && responseCode.code != 404;"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/orders",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Através de um pedido é possível gerar pagamentos de maneira muito mais completa. Desta forma, você consegue explorar diversos recursos exclusivos da nossa API.\n\nFuncionalidades relacionadas ao pedido:  \n1 - Antifraude  \n2 - Multimeios  \n3 - Multicompradores  \n4 - Split  \n5 - Criação de pedidos abertos",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Cobranças",
+					"item": [
+						{
+							"name": "Obter uma cobrança",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/charges/{{ID da cobrança}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"charges",
+										"{{ID da cobrança}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar cobranças",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/charges",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"charges"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancelar/Estornar uma cobrança",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://api.pagar.me/core/v5/charges/{{ID da cobrança}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"pagar",
+										"me"
+									],
+									"path": [
+										"core",
+										"v5",
+										"charges",
+										"{{ID da cobrança}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "StartFragment\n\nA cobrança é sempre a base de um pagamento. Desta forma, ela é gerada através de pedidos e assinaturas.\n\n1. Cobranças relacionadas a um pedido  \n    Neste caso, quando um pedido é gerado, automaticamente uma ou mais cobranças são geradas a partir dele.\n    \n\nExemplo:  \nQuando criado um pedido com um item no valor de R$500,00, será criada uma cobrança de R$500,00 referente a este pedido.\n\nNo caso de multimeios, poderiam ser criadas duas cobranças de R$250,00 referentes ao pedido, uma para cada cartão.\n\n1. Cobranças relacionadas a uma assinatura  \n    Neste caso, ao final de cada ciclo de uma assinatura, é gerada uma cobrança para o assinante.\n    \n\nExemplo:  \nAo final do ciclo da assinatura de uma operadora de celular, é gerada uma fatura contendo as informações de consumo do cliente (200 minutos e 3GB da franquia de internet) no valor de R$200,00. A partir dessa fatura, é gerada uma cobrança no valor de R$200,00.\n\nFuncionalidades relacionadas à cobrança\n\n1) Alterar o cartão de crédito ou meio de pagamento de uma cobrança não autorizada  \n2) Pré-autorizar  \n3) Capturar  \n3) Cancelar  \n4) Retentar automaticamente  \n5) Retentar offline)  \n  \n___  \n  \nStatus:  \nauthorized_pending_capture ---> Autorizada pendente de captura  \nnot_authorized ---> Não autorizada  \ncaptured ---> Capturada  \npartial_capture ---> Capturada parcialmente  \nwaiting_capture ---> Aguardando captura  \nrefunded ---> Estornada  \nvoided ---> Cancelada  \npartial_refunded ---> Estornada parcialmente  \npartial_void ---> Cancelada parcialmente  \nerror_on_voiding ---> Erro no cancelamento  \nerror_on_refunding ---> Erro no estorno  \nwaiting_cancellation ---> Aguardando cancelamento  \nwith_error ---> Com erro  \nfailed ---> Falha"
+				}
+			],
+			"description": "StartFragment\n\nEm nossos [pedidos](https://docs.pagar.me/reference#pedidos-1) e [cobranças](https://docs.pagar.me/reference#cobranças-1), dentro possuímos o nó `payment` responsável pelas instruções de pagamento podendo comportar os meios de pagamento: `credit_card`, `boleto` e `Pix`. Especificamente para **pedidos** está disponível também o meio de pagamento `checkout`."
+		},
+		{
+			"name": "Webhooks",
+			"item": [
+				{
+					"name": "Reenviar um Webhook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pagar.me/core/v5/hooks/{{ID do webhook}}/retry",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pagar",
+								"me"
+							],
+							"path": [
+								"core",
+								"v5",
+								"hooks",
+								"{{ID do webhook}}",
+								"retry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter um Webhook",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pagar.me/core/v5/hooks/{{ID do webhook}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pagar",
+								"me"
+							],
+							"path": [
+								"core",
+								"v5",
+								"hooks",
+								"{{ID do webhook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Webhooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pagar.me/core/v5/hooks",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pagar",
+								"me"
+							],
+							"path": [
+								"core",
+								"v5",
+								"hooks"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Os Webhooks são as notificações que enviamos para você sempre que um evento ocorre.\n\nA cada atualização, o sistema envia um HTTP POST para a URL configurada no webhook, com todas as informações relevantes sobre cobranças, pedidos, assinaturas, entre outros. Desta maneira, o seu sistema, ao receber essa notificação, pode executar os próximos passos.\n\nVocê tem total liberdade para escolher sobre quais eventos quer ser notificado e para qual URL cada webhook será enviado."
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "SUA CHAVE SECRETA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
